@@ -25,10 +25,12 @@ void createTree(adrNode &root) {
 adrNode createNode(infotype x) {
     adrNode p = new Node;
     p->info = x;
+    p->info.searchCount = 0;
     p->left = nullptr;
     p->right = nullptr;
     return p;
 }
+
 
 void insertNode(adrNode &root, adrNode p) {
     if (root == nullptr) {
@@ -51,44 +53,81 @@ adrNode searchNode(adrNode root, infotype x) {
     return root;
 }
 
-static bool hasInitial(adrNode root, char initial) {
-    if (root == nullptr) {
-        return false;
-    }
-
-    char c = root->info.empty() ? '\0' : root->info[0];
-    bool match = (root->info.size() > 1) && (c == initial);
-
-    return hasInitial(root->left, initial) || match || hasInitial(root->right, initial);
+static bool isHeaderNode(const infotype& info) {
+    return info.word.size() == 1 &&
+           info.word[0] >= 'A' && info.word[0] <= 'Z';
 }
 
-static void printByInitial(adrNode root, char initial) {
-    if (root == nullptr) {
+static void findMostSearched(adrNode root, adrNode &best) {
+    if (root == nullptr) return;
+
+    findMostSearched(root->left, best);
+
+    if (!isHeaderNode(root->info)) {
+        if (best == nullptr || root->info.searchCount > best->info.searchCount) {
+            best = root;
+        }
+    }
+
+    findMostSearched(root->right, best);
+}
+
+void displayMostSearched(adrNode root) {
+    adrNode best = nullptr;
+    findMostSearched(root, best);
+
+    if (best == nullptr || best->info.searchCount == 0) {
+        cout << "Belum ada kata yang sering dicari." << endl;
         return;
     }
 
-    printByInitial(root->left, initial);
+    cout << "Kata yang paling sering dicari:" << endl;
+    cout << "Kata : " << best->info.word << endl;
+    cout << "Arti : " << best->info.meaning << endl;
+    cout << "Dicari sebanyak: " << best->info.searchCount << "x" << endl;
+}
 
-    if (!root->info.empty() && root->info.size() > 1) {
-        char c = root->info[0];
-        if (c == initial) {
-            cout << "  - " << root->info << endl;
+
+static bool hasInitial(adrNode root, char initial) {
+    if (root == nullptr) return false;
+
+    const string &w = root->info.word;
+
+    if (!isHeaderNode(root->info) && w.size() > 1 && w[0] == initial)
+        return true;
+
+    return hasInitial(root->left, initial) || hasInitial(root->right, initial);
+}
+
+static void printByInitial(adrNode root, char initial, bool &firstPrinted) {
+    if (root == nullptr) return;
+
+    printByInitial(root->left, initial, firstPrinted);
+
+    if (!isHeaderNode(root->info)) {
+        const string &w = root->info.word;
+        if (!w.empty() && (char)toupper((unsigned char)w[0]) == initial) {
+            if (!firstPrinted) {
+                cout << ", ";
+            }
+            cout << w;
+            firstPrinted = false;
         }
     }
 
-    printByInitial(root->right, initial);
+    printByInitial(root->right, initial, firstPrinted);
 }
+
 
 void displayDictionary(adrNode root) {
     for (char initial = 'A'; initial <= 'Z'; ++initial) {
-        cout << initial << ":" << endl;
-        if (hasInitial(root, initial)) {
-            printByInitial(root, initial);
-        } else {
-            cout << "  No words starting with " << initial << endl;
-        }
+        cout << initial << ": ";
+        bool firstPrinted = true;
+        printByInitial(root, initial, firstPrinted);
+        cout << endl;
     }
 }
+
 
 void deleteNode(adrNode &root, infotype x) {
     if (root == nullptr) {
@@ -129,46 +168,44 @@ void deleteNode(adrNode &root, infotype x) {
 }
 
 void filterNodes(adrNode root, char initial) {
-    if (root != nullptr) {
-        filterNodes(root->left, initial);
-        if (!root->info.empty() && root->info[0] == initial) {
-            cout << root->info << " ";
-        }
-        filterNodes(root->right, initial);
-    }
+    bool firstPrinted = true;
+    printByInitial(root, initial, firstPrinted);
 }
 
+
 int countNodes(adrNode root) {
-    int count = 0;
-    if (root == nullptr) {
-        return 0;
-    }
-    count += countNodes(root->left);
-    count += 1;
-    count += countNodes(root->right);
-    return count;
+    if (root == nullptr) return 0;
+
+    int left = countNodes(root->left);
+    int right = countNodes(root->right);
+
+    int self = isHeaderNode(root->info) ? 0 : 1;
+
+    return left + self + right;
 }
 
 infotype getMinValue(adrNode root) {
-    if (root == nullptr) {
-        cout << "Tree is empty" << endl;
-        return "";
-    }
-    adrNode current = root;
-    while (current->left != nullptr) {
-        current = current->left;
-    }
-    return current->info;
+    infotype empty = {"", ""};
+    if (root == nullptr) return empty;
+
+    infotype leftMin = getMinValue(root->left);
+    if (!leftMin.word.empty()) return leftMin;
+    if (!isHeaderNode(root->info)) return root->info;
+
+    return getMinValue(root->right);
 }
 
+
+
 infotype getMaxValue(adrNode root) {
-    if (root == nullptr) {
-        cout << "Tree is empty" << endl;
-        return "";
-    }
-    adrNode current = root;
-    while (current->right != nullptr) {
-        current = current->right;
-    }
-    return current->info;
+    infotype empty = {"", ""};
+    if (root == nullptr) return empty;
+
+    infotype rightMax = getMaxValue(root->right);
+    if (!rightMax.word.empty()) return rightMax;
+    if (!isHeaderNode(root->info)) return root->info;
+
+    return getMaxValue(root->left);
 }
+
+

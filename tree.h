@@ -8,6 +8,7 @@ using namespace std;
 struct isiInfo {
     string word;
     string meaning;
+    int searchCount;
 };
 
 typedef isiInfo infotype;
@@ -18,6 +19,19 @@ struct Node {
   adrNode left;
   adrNode right;
 };
+
+inline bool operator<(const infotype& a, const infotype& b) {
+    return a.word < b.word;
+}
+inline bool operator>(const infotype& a, const infotype& b) {
+    return a.word > b.word;
+}
+inline bool operator==(const infotype& a, const infotype& b) {
+    return a.word == b.word;
+}
+inline bool operator!=(const infotype& a, const infotype& b) {
+    return !(a == b);
+}
 
 void displayMenu();
 void createTree(adrNode &root);
@@ -32,5 +46,6 @@ int countNodes(adrNode root);
 infotype getMinValue(adrNode root);
 infotype getMaxValue(adrNode root);
 void displayDictionary(adrNode root);
+void displayMostSearched(adrNode root);
 
 #endif // KAMUS_H_INCLUDED

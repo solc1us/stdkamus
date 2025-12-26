@@ -1,7 +1,21 @@
 #include <iostream>
+#include <cctype>
+#include <string>
 #include "tree.h"
 
 using namespace std;
+
+static void normalizeWord(string &s) {
+    if (s.empty()) return;
+
+    while (!s.empty() && isspace((unsigned char)s.front())) s.erase(s.begin());
+    while (!s.empty() && isspace((unsigned char)s.back())) s.pop_back();
+    if (s.empty()) return;
+
+    for (char &ch : s) ch = (char)tolower((unsigned char)ch);
+
+    s[0] = (char)toupper((unsigned char)s[0]);
+}
 
 int main()
 {
@@ -13,11 +27,29 @@ int main()
         adrNode newNode = createNode(internalNodes[i]);
         insertNode(root, newNode);
     }
-    infotype words[] = {{"Apple", ""}, {"Zebra", ""}, {"Banana", ""}, {"Cherry", ""}, {"Date", ""}, {"Fig", ""}, {"Sour", ""}, {"Raspberry", ""}, {"Lemon", ""}, {"Mango", ""}, {"Nectarine", ""}};
-    for (int i = 0; i < 11; i++) {
-        adrNode newNode = createNode(words[i]);
-        insertNode(root, newNode);
-    }
+
+   infotype words[] = {
+    {"Apple", "Buah apel; buah berwarna merah/hijau yang rasanya manis atau asam."},
+    {"Zebra", "Hewan mamalia bergaris hitam-putih yang hidup di Afrika."},
+    {"Banana", "Buah pisang; buah kuning yang kaya kalium."},
+    {"Cherry", "Buah ceri; buah kecil bulat, biasanya merah dan manis."},
+    {"Date", "Buah kurma; buah manis dari pohon kurma."},
+    {"Fig", "Buah ara; buah lembut dengan biji kecil-kecil."},
+    {"Sour", "Rasa asam; kebalikan dari manis."},
+    {"Raspberry", "Buah beri berwarna merah/ungu, rasanya manis-asam."},
+    {"Lemon", "Buah lemon; buah kuning dengan rasa sangat asam."},
+    {"Mango", "Buah mangga; buah tropis manis, dagingnya kuning/oranye."},
+    {"Nectarine", "Buah nektarin; mirip peach tapi kulitnya halus."}
+};
+
+int nWords = sizeof(words) / sizeof(words[0]);
+
+for (int i = 0; i < nWords; i++) {
+    normalizeWord(words[i].word);
+    adrNode newNode = createNode(words[i]);
+    insertNode(root, newNode);
+}
+
 
     int choice = -1;
     while (choice != 0)
@@ -34,19 +66,37 @@ int main()
             cout << "Masukkan node: ";
             infotype info;
             cin >> info.word;
+            normalizeWord(info.word);
             adrNode newNode = createNode(info);
             insertNode(root, newNode);
             break;
         }
+
         case 2:
         {
             cout << "Masukkan kata yang ingin dicari: ";
             infotype searchValue;
             cin >> searchValue.word;
+            normalizeWord(searchValue.word);
+
             adrNode foundNode = searchNode(root, searchValue);
             if (foundNode != nullptr)
             {
-                cout << "Kata " << searchValue.word << " ditemukan." << endl;
+                // skip header
+                if (foundNode->info.word.size() == 1 &&
+                    foundNode->info.word[0] >= 'A' &&
+                    foundNode->info.word[0] <= 'Z')
+                {
+                    cout << "Itu hanya header huruf." << endl;
+                }
+                else
+                {
+                    foundNode->info.searchCount++;
+                    cout << "Kata : " << foundNode->info.word << endl;
+                    cout << "Arti : " << foundNode->info.meaning << endl;
+                    cout << "Dicari sebanyak: "
+                         << foundNode->info.searchCount << "x" << endl;
+                }
             }
             else
             {
@@ -54,6 +104,8 @@ int main()
             }
             break;
         }
+
+
         case 3:
         {
             cout << "Isi kamus:" << endl;
@@ -62,18 +114,22 @@ int main()
         }
         case 4:
         {
-            cout << "Masukkan kata yang ingin dihapus: ";
-            infotype deleteValue.word;
+           cout << "Masukkan kata yang ingin dihapus: ";
+            infotype deleteValue;
             cin >> deleteValue.word;
-            deleteNode(root, deleteValue.word);
+            normalizeWord(deleteValue.word);
+            deleteValue.meaning = "";
+            deleteNode(root, deleteValue);
             cout << "Kata " << deleteValue.word << " telah dihapus (jika ada)." << endl;
             break;
         }
+
         case 5:
         {
-            cout << "Masukkan inisial untuk memfilter: ";
+           cout << "Masukkan inisial untuk memfilter: ";
             char initial;
             cin >> initial;
+            initial = (char)toupper((unsigned char)initial);
             cout << "Kata-kata yang dimulai dengan '" << initial << "': ";
             filterNodes(root, initial);
             cout << endl;
@@ -103,9 +159,10 @@ int main()
         }
         case 9:
         {
-            cout << "Kata yang sering dicari fitur belum diimplementasikan." << endl;
+            displayMostSearched(root);
             break;
         }
+
         case 0:
         {
             cout << "Keluar dari program." << endl;

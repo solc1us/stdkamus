@@ -10,3 +10,16 @@
 	<iostream>
 	"tree.h"
 
+1766770219 source:c:\users\hp\documents\stdkamus-main\tree.cpp
+	<iostream>
+	"tree.h"
+
+1766770073 c:\users\hp\documents\stdkamus-main\tree.h
+	<string>
+
+1766770101 source:c:\users\hp\documents\stdkamus-main\main.cpp
+	<iostream>
+	<cctype>
+	<string>
+	"tree.h"
+
