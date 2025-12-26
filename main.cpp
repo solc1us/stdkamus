@@ -63,9 +63,9 @@ int main()
         case 4:
         {
             cout << "Masukkan kata yang ingin dihapus: ";
-            infotype deleteValue;
-            cin >> deleteValue;
-            deleteNode(root, deleteValue);
+            infotype deleteValue.word;
+            cin >> deleteValue.word;
+            deleteNode(root, deleteValue.word);
             cout << "Kata " << deleteValue.word << " telah dihapus (jika ada)." << endl;
             break;
         }
