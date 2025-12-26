@@ -6,15 +6,16 @@ using namespace std;
 void displayMenu() {
     cout << "==========================" << endl;
     cout << "Menu:" << endl;
-    cout << "1. Insert Node" << endl;
-    cout << "2. Search Node" << endl;
-    cout << "3. Display Tree" << endl;
-    cout << "4. Delete Node" << endl;
-    cout << "5. Filter Nodes by Initial" << endl;
-    cout << "6. Count Nodes" << endl;
-    cout << "7. Get Min Value" << endl;
-    cout << "8. Get Max Value" << endl;
-    cout << "9. Exit" << endl;
+    cout << "1. Masukkan kata" << endl;
+    cout << "2. Cari kata" << endl;
+    cout << "3. Tampilkan kamus lengkap" << endl;
+    cout << "4. Hapus kata" << endl;
+    cout << "5. Filter kata berdasarkan huruf awal" << endl;
+    cout << "6. Banyak kata dalam kamus" << endl;
+    cout << "7. Kata pertama" << endl;
+    cout << "8. Kata terakhir" << endl;
+    cout << "9. Kata yang sering dicari" << endl;
+    cout << "0. Keluar" << endl;
 }
 
 void createTree(adrNode &root) {
@@ -50,23 +51,6 @@ adrNode searchNode(adrNode root, infotype x) {
     return root;
 }
 
-void displayTreeAscending(adrNode root) {
-    if (root != nullptr) {
-        displayTreeAscending(root->left);
-        cout << root->info << " ";
-        displayTreeAscending(root->right);
-    }
-}
-
-void displayTreeDescending(adrNode root) {
-    if (root != nullptr) {
-        displayTreeDescending(root->right);
-        cout << root->info << " ";
-        displayTreeDescending(root->left);
-    }
-}
-
-// Check recursively whether any word starts with the given initial.
 static bool hasInitial(adrNode root, char initial) {
     if (root == nullptr) {
         return false;
@@ -78,7 +62,6 @@ static bool hasInitial(adrNode root, char initial) {
     return hasInitial(root->left, initial) || match || hasInitial(root->right, initial);
 }
 
-// Recursively print words matching the given initial in in-order sequence.
 static void printByInitial(adrNode root, char initial) {
     if (root == nullptr) {
         return;

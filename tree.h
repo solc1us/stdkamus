@@ -5,7 +5,12 @@
 
 using namespace std;
 
-typedef string infotype;
+struct isiInfo {
+    string word;
+    string meaning;
+};
+
+typedef isiInfo infotype;
 typedef struct Node *adrNode;
 
 struct Node {
