@@ -1,7 +1,12 @@
 # depslib dependency file v1.0
-1765851416 source:d:\marcel\file-ngoding-marcel\uni\strukdat\tubeskamus\tree.cpp
+1766740781 source:d:\marcel\file-ngoding-marcel\uni\strukdat\tubeskamus\tree.cpp
 	<iostream>
 	"tree.h"
 
-1765851363 d:\marcel\file-ngoding-marcel\uni\strukdat\tubeskamus\tree.h
+1766739454 d:\marcel\file-ngoding-marcel\uni\strukdat\tubeskamus\tree.h
+	<string>
+
+1766739339 source:d:\marcel\file-ngoding-marcel\uni\strukdat\tubeskamus\main.cpp
+	<iostream>
+	"tree.h"
 

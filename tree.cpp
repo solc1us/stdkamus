@@ -66,6 +66,47 @@ void displayTreeDescending(adrNode root) {
     }
 }
 
+// Check recursively whether any word starts with the given initial.
+static bool hasInitial(adrNode root, char initial) {
+    if (root == nullptr) {
+        return false;
+    }
+
+    char c = root->info.empty() ? '\0' : root->info[0];
+    bool match = (root->info.size() > 1) && (c == initial);
+
+    return hasInitial(root->left, initial) || match || hasInitial(root->right, initial);
+}
+
+// Recursively print words matching the given initial in in-order sequence.
+static void printByInitial(adrNode root, char initial) {
+    if (root == nullptr) {
+        return;
+    }
+
+    printByInitial(root->left, initial);
+
+    if (!root->info.empty() && root->info.size() > 1) {
+        char c = root->info[0];
+        if (c == initial) {
+            cout << "  - " << root->info << endl;
+        }
+    }
+
+    printByInitial(root->right, initial);
+}
+
+void displayDictionary(adrNode root) {
+    for (char initial = 'A'; initial <= 'Z'; ++initial) {
+        cout << initial << ":" << endl;
+        if (hasInitial(root, initial)) {
+            printByInitial(root, initial);
+        } else {
+            cout << "  No words starting with " << initial << endl;
+        }
+    }
+}
+
 void deleteNode(adrNode &root, infotype x) {
     if (root == nullptr) {
         return;
@@ -128,6 +169,7 @@ int countNodes(adrNode root) {
 infotype getMinValue(adrNode root) {
     if (root == nullptr) {
         cout << "Tree is empty" << endl;
+        return "";
     }
     adrNode current = root;
     while (current->left != nullptr) {
@@ -139,6 +181,7 @@ infotype getMinValue(adrNode root) {
 infotype getMaxValue(adrNode root) {
     if (root == nullptr) {
         cout << "Tree is empty" << endl;
+        return "";
     }
     adrNode current = root;
     while (current->right != nullptr) {

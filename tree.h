@@ -1,6 +1,8 @@
 #ifndef KAMUS_H_INCLUDED
 #define KAMUS_H_INCLUDED
 
+#include <string>
+
 using namespace std;
 
 typedef string infotype;
@@ -24,5 +26,6 @@ void filterNodes(adrNode root, char initial);
 int countNodes(adrNode root);
 infotype getMinValue(adrNode root);
 infotype getMaxValue(adrNode root);
+void displayDictionary(adrNode root);
 
 #endif // KAMUS_H_INCLUDED

@@ -8,13 +8,18 @@ int main()
     adrNode root;
     createTree(root);
 
+    string internalNodes[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    for (int i = 0; i < 26; i++) {
+        adrNode newNode = createNode(internalNodes[i]);
+        insertNode(root, newNode);
+    }
     string words[] = {"Apple", "Zebra", "Banana", "Cherry", "Date", "Fig", "Sour", "Raspberry", "Lemon", "Mango", "Nectarine"};
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
         adrNode newNode = createNode(words[i]);
         insertNode(root, newNode);
     }
 
-    int choice;
+    int choice = 0;
     while (choice != 9)
     {
 
@@ -32,8 +37,10 @@ int main()
             adrNode newNode = createNode(info);
             insertNode(root, newNode);
             break;
-            cout << endl
-                 << "Masukkan kata yang ingin dicari: ";
+        }
+        case 2:
+        {
+            cout << "Masukkan kata yang ingin dicari: ";
             infotype searchValue;
             cin >> searchValue;
             adrNode foundNode = searchNode(root, searchValue);
@@ -49,26 +56,8 @@ int main()
         }
         case 3:
         {
-            cout << "Ascending order / Descending order?" << endl;
-            cout << "1. Ascending" << endl;
-            cout << "2. Descending" << endl;
-            int orderChoice;
-            cin >> orderChoice;
-            if (orderChoice == 1)
-            {
-                cout << "Tree dalam urutan menaik: ";
-                displayTreeAscending(root);
-                cout << endl;
-            }
-            else if (orderChoice == 2)
-            {
-            }
-            else
-            {
-                cout << "Pilihan tidak valid. Menampilkan dalam urutan menurun secara default: ";
-                displayTreeAscending(root);
-                cout << endl;
-            }
+            cout << "Isi kamus:" << endl;
+            displayDictionary(root);
             break;
         }
         case 4:
