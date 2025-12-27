@@ -78,13 +78,14 @@ int main()
         cout << "Pilih menu: ";
         cin >> choice;
 
-        if (cin.fail()) {
+        if (cin.fail())
+        {
             cin.clear();
             cin.ignore(10000, '\n');
             cout << "Input tidak valid. Silakan coba lagi." << endl;
             continue;
         }
-        
+
         cin.ignore(10000, '\n');
 
         switch (choice)
@@ -95,13 +96,25 @@ int main()
             infotype info;
             getline(cin, info.word);
             normalizeWord(info.word);
+
             cout << "Masukkan arti: ";
             getline(cin, info.meaning);
             info.searchCount = 0;
 
-            adrNode newNode = createNode(info);
+            adrNode existingNode = searchNode(root, info);
+            if (existingNode != nullptr && existingNode->info.word.size() > 1)
+            {
+                cout << "Kata '" << info.word << "' sudah ada dalam kamus." << endl;
+                break;
+            }
+            else
+            {
 
-            insertNode(root, newNode);
+                adrNode newNode = createNode(info);
+                insertNode(root, newNode);
+                cout << "Kata '" << info.word << "' berhasil ditambahkan." << endl;
+            }
+
             break;
         }
 
@@ -149,10 +162,18 @@ int main()
             infotype deleteValue;
             cin >> deleteValue.word;
             normalizeWord(deleteValue.word);
-            deleteValue.meaning = "";
-            deleteNode(root, deleteValue);
-            cout << "Kata " << deleteValue.word << " telah dihapus." << endl;
-            break;
+            cin.ignore(10000, '\n');
+            adrNode checkNode = searchNode(root, deleteValue);
+            if (checkNode == nullptr)
+            {
+                cout << "Kata " << deleteValue.word << " tidak ditemukan." << endl;
+                break;
+            } else {
+                deleteValue.meaning = "";
+                deleteNode(root, deleteValue);
+                cout << "Kata " << deleteValue.word << " telah dihapus." << endl;
+                break;
+            }
         }
 
         case 5:
